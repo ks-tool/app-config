@@ -1,0 +1,30 @@
+[package]
+name = "appconfig"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "An application's configuration from a file, the environment and the command line, in that order — the Rust side of github.com/ks-tool/app-config, with its naming rule"
+license = "MIT"
+repository = "https://github.com/ks-tool/app-config"
+
+[features]
+default = []
+# The command line as a source: the arguments clap was given, over everything else.
+clap = ["dep:clap"]
+# File formats beyond .env and .json, by extension.
+toml = ["dep:toml"]
+yaml = ["dep:serde_yaml"]
+
+[dependencies]
+serde = "1"
+serde_json = "1"
+clap = { version = "4", optional = true }
+toml = { version = "0.8", optional = true }
+serde_yaml = { version = "0.9", optional = true }
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+clap = { version = "4" }
+
+[package.metadata.docs.rs]
+all-features = true

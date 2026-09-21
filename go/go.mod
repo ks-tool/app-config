@@ -1,4 +1,4 @@
-module github.com/ks-tool/app-config
+module github.com/ks-tool/app-config/go
 
 go 1.27.0
 
