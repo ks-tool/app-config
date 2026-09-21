@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"bytes"
@@ -8,8 +8,6 @@ import (
 	"io"
 	"net/http"
 	"strings"
-
-	"github.com/caarlos0/env/v11"
 )
 
 type Vault struct {
@@ -70,7 +68,7 @@ func (v *Vault) Source(ctx context.Context, paths ...string) Source {
 }
 
 // FromVault reads settings from KV and fills them in by env tags, like FromEnv.
-func FromVault(ctx context.Context, vlt *Vault, v any, opts *env.Options, paths ...string) error {
+func FromVault(ctx context.Context, vlt *Vault, v any, opts *EnvOptions, paths ...string) error {
 	kv, err := vlt.Read(ctx, paths...)
 	if err != nil {
 		return err

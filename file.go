@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"bytes"
@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
-	"github.com/caarlos0/env/v11"
 )
 
 type Decoder func([]byte) (map[string]string, error)
@@ -30,7 +28,7 @@ func RegisterFileDecoder(ext string, dec Decoder) {
 // FromFile reads settings from a file; the format follows the extension.
 // Keys are matched against env tags, as in FromEnv, so opts.Prefix is
 // usually left empty.
-func FromFile(name string, v any, opts *env.Options) error {
+func FromFile(name string, v any, opts *EnvOptions) error {
 	kv, err := decodeFile(name)
 	if err != nil {
 		return err

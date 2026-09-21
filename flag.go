@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"encoding"
@@ -10,47 +10,49 @@ import (
 	"github.com/spf13/pflag"
 )
 
+type FlagSet = pflag.FlagSet
+
 var reg = map[reflect.Type]func(reflect.Value) pflag.Value{}
 
 func init() {
-	registerVar((*pflag.FlagSet).StringVar)
-	registerVar((*pflag.FlagSet).BoolVar)
-	registerVar((*pflag.FlagSet).DurationVar)
+	registerVar((*FlagSet).StringVar)
+	registerVar((*FlagSet).BoolVar)
+	registerVar((*FlagSet).DurationVar)
 
-	registerVar((*pflag.FlagSet).IntVar)
-	registerVar((*pflag.FlagSet).Int8Var)
-	registerVar((*pflag.FlagSet).Int16Var)
-	registerVar((*pflag.FlagSet).Int32Var)
-	registerVar((*pflag.FlagSet).Int64Var)
-	registerVar((*pflag.FlagSet).UintVar)
-	registerVar((*pflag.FlagSet).Uint8Var)
-	registerVar((*pflag.FlagSet).Uint16Var)
-	registerVar((*pflag.FlagSet).Uint32Var)
-	registerVar((*pflag.FlagSet).Uint64Var)
-	registerVar((*pflag.FlagSet).Float32Var)
-	registerVar((*pflag.FlagSet).Float64Var)
+	registerVar((*FlagSet).IntVar)
+	registerVar((*FlagSet).Int8Var)
+	registerVar((*FlagSet).Int16Var)
+	registerVar((*FlagSet).Int32Var)
+	registerVar((*FlagSet).Int64Var)
+	registerVar((*FlagSet).UintVar)
+	registerVar((*FlagSet).Uint8Var)
+	registerVar((*FlagSet).Uint16Var)
+	registerVar((*FlagSet).Uint32Var)
+	registerVar((*FlagSet).Uint64Var)
+	registerVar((*FlagSet).Float32Var)
+	registerVar((*FlagSet).Float64Var)
 
-	registerVar((*pflag.FlagSet).StringSliceVar)
-	registerVar((*pflag.FlagSet).IntSliceVar)
-	registerVar((*pflag.FlagSet).Int32SliceVar)
-	registerVar((*pflag.FlagSet).Int64SliceVar)
-	registerVar((*pflag.FlagSet).UintSliceVar)
-	registerVar((*pflag.FlagSet).BoolSliceVar)
-	registerVar((*pflag.FlagSet).Float32SliceVar)
-	registerVar((*pflag.FlagSet).Float64SliceVar)
-	registerVar((*pflag.FlagSet).DurationSliceVar)
+	registerVar((*FlagSet).StringSliceVar)
+	registerVar((*FlagSet).IntSliceVar)
+	registerVar((*FlagSet).Int32SliceVar)
+	registerVar((*FlagSet).Int64SliceVar)
+	registerVar((*FlagSet).UintSliceVar)
+	registerVar((*FlagSet).BoolSliceVar)
+	registerVar((*FlagSet).Float32SliceVar)
+	registerVar((*FlagSet).Float64SliceVar)
+	registerVar((*FlagSet).DurationSliceVar)
 
-	registerVar((*pflag.FlagSet).StringToStringVar)
-	registerVar((*pflag.FlagSet).StringToIntVar)
-	registerVar((*pflag.FlagSet).StringToInt64Var)
+	registerVar((*FlagSet).StringToStringVar)
+	registerVar((*FlagSet).StringToIntVar)
+	registerVar((*FlagSet).StringToInt64Var)
 
-	registerVar((*pflag.FlagSet).IPVar)
-	registerVar((*pflag.FlagSet).IPNetVar)
-	registerVar((*pflag.FlagSet).IPMaskVar)
-	registerVar((*pflag.FlagSet).IPSliceVar)
-	registerVar((*pflag.FlagSet).IPNetSliceVar)
+	registerVar((*FlagSet).IPVar)
+	registerVar((*FlagSet).IPNetVar)
+	registerVar((*FlagSet).IPMaskVar)
+	registerVar((*FlagSet).IPSliceVar)
+	registerVar((*FlagSet).IPNetSliceVar)
 
-	registerVar((*pflag.FlagSet).BytesBase64Var)
+	registerVar((*FlagSet).BytesBase64Var)
 }
 
 type value[T any] struct {
@@ -88,7 +90,7 @@ func (t text) String() string {
 	return fmt.Sprint(t.f.Interface())
 }
 
-func registerVar[T any](bind func(*pflag.FlagSet, *T, string, T, string)) {
+func registerVar[T any](bind func(*FlagSet, *T, string, T, string)) {
 	reg[reflect.TypeFor[T]()] = func(f reflect.Value) pflag.Value {
 		p := f.Addr().Interface().(*T)
 		scratch := pflag.NewFlagSet("", pflag.ContinueOnError)
@@ -107,14 +109,14 @@ func RegisterFlagType[T any](kind string, parse func(string) (T, error)) {
 	}
 }
 
-func FromEnv(v any, opts *env.Options) error {
+func FromEnv(v any, opts *EnvOptions) error {
 	if opts == nil {
 		return env.Parse(v)
 	}
 	return env.ParseWithOptions(v, *opts)
 }
 
-func BindFlags(fs *pflag.FlagSet, prefix string, cfg any) {
+func BindFlags(fs *FlagSet, prefix string, cfg any) {
 	v := reflect.ValueOf(cfg).Elem()
 	t := v.Type()
 	for i := range t.NumField() {

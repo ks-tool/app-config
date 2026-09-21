@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"context"
@@ -8,8 +8,6 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/caarlos0/env/v11"
 )
 
 // vaultServer starts a test server that is shut down together with the test.
@@ -228,7 +226,7 @@ func TestFromVaultWithOptions(t *testing.T) {
 
 	var c config
 	must(t, FromVault(context.Background(), NewVault(srv.URL, nil), &c,
-		&env.Options{Prefix: "APP_"}, "secret/app"))
+		&EnvOptions{Prefix: "APP_"}, "secret/app"))
 
 	if c.Host != "h" {
 		t.Errorf("Host = %q", c.Host)
@@ -238,7 +236,7 @@ func TestFromVaultWithOptions(t *testing.T) {
 // The given opts must not be mutated: Environment is replaced inside the call only.
 func TestFromVaultDoesNotMutateOptions(t *testing.T) {
 	srv := vaultServer(t, json200(`{"data":{"host":"h"}}`))
-	opts := &env.Options{}
+	opts := &EnvOptions{}
 
 	must(t, FromVault(context.Background(), NewVault(srv.URL, nil), &config{}, opts, "secret/app"))
 

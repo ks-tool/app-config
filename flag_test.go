@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"errors"
@@ -12,7 +12,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/caarlos0/env/v11"
 	"github.com/spf13/pflag"
 )
 
@@ -32,7 +31,7 @@ type flags struct {
 
 type size int64
 
-func newFlagSet() *pflag.FlagSet { return pflag.NewFlagSet("test", pflag.ContinueOnError) }
+func newFlagSet() *FlagSet { return pflag.NewFlagSet("test", pflag.ContinueOnError) }
 
 func TestBindFlagsParse(t *testing.T) {
 	var c flags
@@ -192,7 +191,7 @@ func TestRegisterFlagTypeRepeatedPanics(t *testing.T) {
 
 func TestFromEnv(t *testing.T) {
 	var c config
-	must(t, FromEnv(&c, &env.Options{Environment: map[string]string{
+	must(t, FromEnv(&c, &EnvOptions{Environment: map[string]string{
 		"APP_HOST": "h", "APP_PORT": "80", "APP_DB_PASS": "p",
 	}, Prefix: "APP_"}))
 
@@ -213,7 +212,7 @@ func TestFromEnvUsesProcessEnv(t *testing.T) {
 }
 
 func TestFromEnvError(t *testing.T) {
-	err := FromEnv(&config{}, &env.Options{Environment: map[string]string{"PORT": "not-a-number"}})
+	err := FromEnv(&config{}, &EnvOptions{Environment: map[string]string{"PORT": "not-a-number"}})
 	if err == nil || !strings.Contains(err.Error(), "Port") {
 		t.Errorf("err = %v, want mention of the Port field", err)
 	}

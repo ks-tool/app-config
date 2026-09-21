@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 // fromKV parses a flat key/value set with the same env tags as FromEnv.
 // Keys are looked up as-is and upper-cased: db_host in a file or in Vault KV
 // lands in the field tagged env:"DB_HOST".
-func fromKV(kv map[string]string, v any, opts *env.Options) error {
+func fromKV(kv map[string]string, v any, opts *EnvOptions) error {
 	m := make(map[string]string, 2*len(kv))
 	addKV(m, kv)
 	return parse(m, v, opts)
@@ -27,8 +27,8 @@ func addKV(m, kv map[string]string) {
 	}
 }
 
-func parse(kv map[string]string, v any, opts *env.Options) error {
-	o := env.Options{}
+func parse(kv map[string]string, v any, opts *EnvOptions) error {
+	o := EnvOptions{}
 	if opts != nil {
 		o = *opts // a copy: Environment is replaced for this call only
 	}

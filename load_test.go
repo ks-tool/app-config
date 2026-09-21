@@ -1,12 +1,9 @@
-package app_config
+package appconfig
 
 import (
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/caarlos0/env/v11"
-	"github.com/spf13/pflag"
 )
 
 type loadCfg struct {
@@ -17,7 +14,7 @@ type loadCfg struct {
 }
 
 // bindParse binds and parses the flags the way a command does it before Load.
-func bindParse(t *testing.T, cfg any, args ...string) *pflag.FlagSet {
+func bindParse(t *testing.T, cfg any, args ...string) *FlagSet {
 	t.Helper()
 	fs := newFlagSet()
 	BindFlags(fs, "", cfg)
@@ -110,7 +107,7 @@ func TestLoadEnvReadsProcessEnv(t *testing.T) {
 func TestLoadWithoutSourcesReadsNothing(t *testing.T) {
 	t.Setenv("TOKEN", "from-process-env")
 
-	for _, src := range [][]Source{nil, {Options(env.Options{
+	for _, src := range [][]Source{nil, {Options(EnvOptions{
 		Environment: map[string]string{"TOKEN": "t"},
 	})}} {
 		err := Load(&loadCfg{}, src...)
@@ -124,7 +121,7 @@ func TestLoadWithPrefix(t *testing.T) {
 	path := write(t, "app.env", "APP_HOST=h\nAPP_TOKEN=t\n")
 
 	var c loadCfg
-	must(t, Load(&c, File(path), Options(env.Options{Prefix: "APP_"})))
+	must(t, Load(&c, File(path), Options(EnvOptions{Prefix: "APP_"})))
 
 	if c.Host != "h" || c.Token != "t" {
 		t.Errorf("got %+v", c)
@@ -304,7 +301,7 @@ func TestLoadPresetValueVsEnvDefault(t *testing.T) {
 	}
 
 	c = plainCfg{Level: "warn"}
-	must(t, Load(&c, Options(env.Options{SetDefaultsForZeroValuesOnly: true})))
+	must(t, Load(&c, Options(EnvOptions{SetDefaultsForZeroValuesOnly: true})))
 	if c.Level != "warn" {
 		t.Errorf("Level = %q, want the preset value kept", c.Level)
 	}

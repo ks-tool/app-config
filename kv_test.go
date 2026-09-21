@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"encoding/json"
@@ -6,8 +6,6 @@ import (
 	"slices"
 	"testing"
 	"time"
-
-	"github.com/caarlos0/env/v11"
 )
 
 type config struct {
@@ -88,7 +86,7 @@ func TestFromKVIgnoresProcessEnv(t *testing.T) {
 
 func TestFromKVRespectsOptions(t *testing.T) {
 	var c config
-	must(t, fromKV(map[string]string{"APP_HOST": "h"}, &c, &env.Options{Prefix: "APP_"}))
+	must(t, fromKV(map[string]string{"APP_HOST": "h"}, &c, &EnvOptions{Prefix: "APP_"}))
 	if c.Host != "h" {
 		t.Errorf("Host = %q", c.Host)
 	}

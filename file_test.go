@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"encoding/json"
@@ -10,8 +10,6 @@ import (
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/caarlos0/env/v11"
 )
 
 func write(t *testing.T, name, body string) string {
@@ -156,7 +154,7 @@ func TestRegisterFileDecoder(t *testing.T) {
 
 func TestFromFileWithOptions(t *testing.T) {
 	var c config
-	must(t, FromFile(write(t, "app.env", "APP_HOST=h\n"), &c, &env.Options{Prefix: "APP_"}))
+	must(t, FromFile(write(t, "app.env", "APP_HOST=h\n"), &c, &EnvOptions{Prefix: "APP_"}))
 
 	if c.Host != "h" {
 		t.Errorf("Host = %q", c.Host)

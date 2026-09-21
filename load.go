@@ -1,4 +1,4 @@
-package app_config
+package appconfig
 
 import (
 	"os"
@@ -6,13 +6,14 @@ import (
 	"strings"
 
 	"github.com/caarlos0/env/v11"
-	"github.com/spf13/pflag"
 )
+
+type EnvOptions = env.Options
 
 type loader struct {
 	kv   map[string]string
-	opts *env.Options
-	fs   *pflag.FlagSet
+	opts *EnvOptions
+	fs   *FlagSet
 }
 
 // Source is one step of Load: a key/value set to merge, flags to parse or the
@@ -68,7 +69,7 @@ func KV(kv map[string]string) Source {
 // The other order needs no Flags at all: load the sources first and bind
 // afterwards, and the flags start off the loaded config, which --help shows as
 // their defaults, while parsing writes over it.
-func Flags(fs *pflag.FlagSet) Source {
+func Flags(fs *FlagSet) Source {
 	return func(l *loader) error {
 		l.fs = fs
 		return nil
@@ -77,7 +78,7 @@ func Flags(fs *pflag.FlagSet) Source {
 
 // Options sets the env options of the whole load: prefix, tag names and so on.
 // Its Environment is ignored, as the merged sources take its place.
-func Options(opts env.Options) Source {
+func Options(opts EnvOptions) Source {
 	return func(l *loader) error {
 		l.opts = &opts
 		return nil
@@ -111,7 +112,7 @@ func Load(v any, src ...Source) error {
 
 // saveFlags copies the fields whose flags were set on the command line and
 // returns a function putting them back.
-func saveFlags(fs *pflag.FlagSet, cfg any) func() {
+func saveFlags(fs *FlagSet, cfg any) func() {
 	if fs == nil {
 		return func() {}
 	}
